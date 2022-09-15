@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<xacro:include filename="inertial_macros.xacro"/>
+
+	<link name="base_link">
+
+	</link>
+	
+	<!-- STAND_LINK -->
+	<joint name="stand_joint" type="fixed">
+		<parent link="base_link"/>
+		<child link="stand_link"/>
+		<origin xyz="0 0 0"/>
+	</joint>
+
+	<link name="stand_link">
+		<visual>
+			<origin xyz="0 0 0.2"/>
+			<geometry>
+				<cylinder radius="0.5" length="0.4"/>
+			</geometry>
+		</visual>
+		
+		<collision>
+			<origin xyz="0 0 0.2"/>
+			<geometry>
+				<cylinder radius="0.5" length="0.4"/>
+			</geometry>
+		</collision>
+		
+		<xacro:inertial_cylinder mass="100" length="0.4" radius="0.5">
+            <origin xyz="0 0 0.2" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+	</link>
+
+	<gazebo reference="stand_link">
+		<material>Gazebo/Red</material>
+		<mu1 value="10"/>
+		<mu2 value="10"/>
+	</gazebo>
+    	
+	<!-- AX1_LINK -->
+	<joint name="ax1_joint" type="revolute">
+		<parent link="stand_link"/>
+		<child link="ax1_link"/>
+		<limit effort="10" velocity="1" upper="${pi*2}" lower="${-pi*2}"/>
+		<axis xyz="0 0 1"/>
+		<origin xyz="0 0 0.4"/>
+		<dynamics damping="10.0" friction="10.0"/>
+	</joint>
+	
+	<link name="ax1_link">
+		<visual>
+			<origin xyz="0 0 0.5"/>
+			<geometry>
+				<box size="0.25 0.25 1"/>
+			</geometry>
+		</visual>
+		
+		<collision>
+			<origin xyz="0 0 0.5"/>
+			<geometry>
+				<box size="0.25 0.25 1"/>
+			</geometry>
+		</collision>
+
+		<xacro:inertial_box mass="1" x="0.25" y="0.25" z="1">
+            <origin xyz="0 0 0.5" rpy="0 0 0"/>
+        </xacro:inertial_box>
+	</link>
+	
+	<gazebo reference="ax1_link">
+		<material>Gazebo/Red</material>
+		<mu1 value="10"/>
+		<mu2 value="10"/>
+	</gazebo>
+
+	<!-- AX2_LINK -->
+	<joint name="ax2_joint" type="revolute">
+		<parent link="ax1_link"/>
+		<child link="ax2_link"/>
+		<limit effort="10" velocity="1" upper="${pi/2}" lower="${-pi/2}"/>
+		<origin xyz="0 0 0.875"/>
+		<axis xyz="1 0 0"/>
+		<dynamics damping="10.0" friction="10.0"/>
+	</joint>
+
+	<link name="ax2_link">
+		<visual>
+			<origin xyz="0.25 0 0.375"/>
+			<geometry>
+				<box size="0.25 0.25 1"/>
+			</geometry>
+		</visual>
+		
+		<collision>
+			<origin xyz="0.25 0 0.375"/>
+			<geometry>
+				<box size="0.25 0.25 1"/>
+			</geometry>
+		</collision>		
+
+		<xacro:inertial_box mass="1" x="0.25" y="0.25" z="1">
+            <origin xyz="0.25 0 0.375" rpy="0 0 0"/>
+        </xacro:inertial_box>
+	</link>
+
+	<gazebo reference="ax2_link">
+		<material>Gazebo/Black</material>
+		<mu1 value="10"/>
+		<mu2 value="10"/>
+	</gazebo>
+
+	<!-- AX3_LINK -->
+	<joint name="ax3_joint" type="revolute">
+		<parent link="ax2_link"/>
+		<child link="ax3_link"/>
+		<limit effort="10" velocity="1" upper="${pi/2}" lower="${-pi/2}"/>
+		<origin xyz="0 0 0.75"/>
+		<axis xyz="1 0 0"/>
+		<dynamics damping="10.0" friction="10.0"/>
+	</joint>
+
+	<link name="ax3_link">
+		<visual>
+			<origin xyz="0 0 0.375"/>
+			<geometry>
+				<box size="0.25 0.25 1"/>
+			</geometry>
+		</visual>
+		
+		<collision>
+			<origin xyz="0.25 0 0.375"/>
+			<geometry>
+				<box size="0.25 0.25 1"/>
+			</geometry>
+		</collision>		
+
+		<xacro:inertial_box mass="1" x="0.25" y="0.25" z="1">
+            <origin xyz="0.25 0 0.375" rpy="0 0 0"/>
+        </xacro:inertial_box>
+	</link>
+
+	<gazebo reference="ax3_link">
+		<material>Gazebo/Red</material>
+		<mu1 value="10"/>
+		<mu2 value="10"/>
+	</gazebo>
+
+	<ros2_control name="GazeboSystem" type="system">
+    	<hardware>
+      		<plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    	</hardware>
+		
+		<joint name="ax1_joint">
+      		<command_interface name="position">
+        		<param name="min">${-pi*2}</param>
+        		<param name="max">${pi*2}</param>
+      		</command_interface>
+      		<state_interface name="position">
+				<param name="initial_value">${0}</param>
+			</state_interface>
+      		<state_interface name="velocity"/>
+      		<!--<state_interface name="effort"/>-->
+    	</joint>   		
+ 
+    	<joint name="ax2_joint">
+      		<command_interface name="position">
+        		<param name="min">${-pi/2}</param>
+        		<param name="max">${pi/2}</param>
+      		</command_interface>
+      		<state_interface name="position">
+				<param name="initial_value">${0}</param>
+			</state_interface>
+      		<state_interface name="velocity"/>
+      		<!--<state_interface name="effort"/>-->
+    	</joint>
+
+		<joint name="ax3_joint">
+      		<command_interface name="position">
+        		<param name="min">${-pi/2}</param>
+        		<param name="max">${pi/2}</param>
+      		</command_interface>
+      		<state_interface name="position">
+				<param name="initial_value">${0}</param>
+			</state_interface>
+      		<state_interface name="velocity"/>
+      		<!--<state_interface name="effort"/>-->
+    	</joint>
+  	</ros2_control>	
+
+</robot>
