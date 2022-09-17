@@ -8,7 +8,7 @@ from rclpy.node import Node
 from control_msgs.action import FollowJointTrajectory
 from trajectory_msgs.msg import JointTrajectoryPoint
 
-class SteeringActionClient(Node):
+class ArmActionClient(Node):
 
     def __init__(self):
         super().__init__('arm_control_actionclient')
@@ -60,7 +60,7 @@ def main(args=None):
     
     rclpy.init()
 
-    action_client = SteeringActionClient()
+    action_client = ArmActionClient()
 
     angle1 = float(sys.argv[1])
     angle2 = float(sys.argv[2])
