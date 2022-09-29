@@ -3,13 +3,17 @@
 
 	<xacro:include filename="inertial_macros.xacro"/>
 
-	<link name="base_link">
-
+	<link name="world">
+		<origin xyz="0 0 0"/>
 	</link>
-	
+
+	<gazebo reference="world">
+		<static>true</static>
+	</gazebo>
+
 	<!-- STAND_LINK -->
 	<joint name="stand_joint" type="fixed">
-		<parent link="base_link"/>
+		<parent link="world"/>
 		<child link="stand_link"/>
 		<origin xyz="0 0 0"/>
 	</joint>
@@ -131,14 +135,14 @@
 		</visual>
 		
 		<collision>
-			<origin xyz="0.25 0 0.375"/>
+			<origin xyz="0 0 0.375"/>
 			<geometry>
 				<box size="0.25 0.25 1"/>
 			</geometry>
 		</collision>		
 
 		<xacro:inertial_box mass="1" x="0.25" y="0.25" z="1">
-            <origin xyz="0.25 0 0.375" rpy="0 0 0"/>
+            <origin xyz="0 0 0.375" rpy="0 0 0"/>
         </xacro:inertial_box>
 	</link>
 
